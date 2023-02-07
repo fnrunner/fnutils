@@ -17,8 +17,11 @@ limitations under the License.
 package meta
 
 import (
+	"encoding/json"
 	"strings"
 
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -86,4 +89,21 @@ func GetGVKFromObject(o client.Object) *schema.GroupVersionKind {
 		Version: o.GetObjectKind().GroupVersionKind().Version,
 		Kind:    o.GetObjectKind().GroupVersionKind().Kind,
 	}
+}
+
+func GetGVK(gvr runtime.RawExtension) (*schema.GroupVersionKind, error) {
+	var u unstructured.Unstructured
+	if err := json.Unmarshal(gvr.Raw, &u); err != nil {
+		return nil, err
+	}
+	gv, err := schema.ParseGroupVersion(u.GetAPIVersion())
+	if err != nil {
+		return nil, err
+	}
+
+	return &schema.GroupVersionKind{
+		Group:   gv.Group,
+		Version: gv.Version,
+		Kind:    u.GetKind(),
+	}, nil
 }
