@@ -91,7 +91,7 @@ func GetGVKFromObject(o client.Object) *schema.GroupVersionKind {
 	}
 }
 
-func GetGVK(gvr runtime.RawExtension) (*schema.GroupVersionKind, error) {
+func GetGVKFromRuntimeRawExtension(gvr runtime.RawExtension) (*schema.GroupVersionKind, error) {
 	var u unstructured.Unstructured
 	if err := json.Unmarshal(gvr.Raw, &u); err != nil {
 		return nil, err
