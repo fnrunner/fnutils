@@ -17,7 +17,6 @@ limitations under the License.
 package kv
 
 import (
-	"fmt"
 	"sync"
 )
 
@@ -81,7 +80,7 @@ func copy(v any) any {
 		}
 		return r
 	default:
-		fmt.Printf("%T\n", v)
+		//fmt.Printf("%T\n", v)
 		return v
 	}
 }
