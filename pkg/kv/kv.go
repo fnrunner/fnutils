@@ -24,6 +24,7 @@ type RecordKVFn func(KV)
 
 type KV interface {
 	AddEntry(k string, v any)
+	DeleteEntry(k string)
 	Add(KV)
 	Get() map[string]any
 	GetValue(string) any
@@ -45,6 +46,12 @@ func (r *kv) AddEntry(k string, v any) {
 	r.m.Lock()
 	defer r.m.Unlock()
 	r.d[k] = v
+}
+
+func (r *kv) DeleteEntry(k string) {
+	r.m.Lock()
+	defer r.m.Unlock()
+	delete(r.d, k)
 }
 
 func (r *kv) Add(o KV) {
